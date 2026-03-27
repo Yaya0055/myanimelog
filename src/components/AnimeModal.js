@@ -512,38 +512,68 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete, e
               <div className="p-3 bg-dark-700/50 border border-dark-600/25 rounded-xl space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] text-dark-400 mb-1">Duree totale (min)</label>
+                    <label className="block text-[10px] text-dark-400 mb-1">Duree totale</label>
                     <div className="flex items-center gap-1">
                       <Clock size={14} className="text-dark-400 shrink-0" />
                       <input
                         type="number"
-                        value={form.duration || 0}
-                        onChange={(e) => setForm((f) => ({ ...f, duration: Math.max(0, parseInt(e.target.value) || 0) }))}
-                        className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                        min="0"
+                        value={Math.floor((form.duration || 0) / 60)}
+                        onChange={(e) => {
+                          const h = Math.max(0, parseInt(e.target.value) || 0);
+                          const m = (form.duration || 0) % 60;
+                          setForm((f) => ({ ...f, duration: h * 60 + m }));
+                        }}
+                        className="w-14 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
                       />
+                      <span className="text-xs text-dark-300 font-medium">h</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={(form.duration || 0) % 60}
+                        onChange={(e) => {
+                          const h = Math.floor((form.duration || 0) / 60);
+                          const m = Math.max(0, Math.min(59, parseInt(e.target.value) || 0));
+                          setForm((f) => ({ ...f, duration: h * 60 + m }));
+                        }}
+                        className="w-14 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                      />
+                      <span className="text-xs text-dark-300 font-medium">min</span>
                     </div>
-                    {form.duration > 0 && (
-                      <p className="text-[10px] text-dark-400 mt-1">
-                        {Math.floor(form.duration / 60)}h{String(form.duration % 60).padStart(2, '0')}
-                      </p>
-                    )}
                   </div>
                   <div>
-                    <label className="block text-[10px] text-dark-400 mb-1">Duree regardee (min)</label>
+                    <label className="block text-[10px] text-dark-400 mb-1">Duree regardee</label>
                     <div className="flex items-center gap-1">
                       <Clock size={14} className="text-dark-400 shrink-0" />
                       <input
                         type="number"
-                        value={form.watchedDuration || 0}
-                        onChange={(e) => setForm((f) => ({ ...f, watchedDuration: Math.min(f.duration, Math.max(0, parseInt(e.target.value) || 0)) }))}
-                        className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                        min="0"
+                        value={Math.floor((form.watchedDuration || 0) / 60)}
+                        onChange={(e) => {
+                          const h = Math.max(0, parseInt(e.target.value) || 0);
+                          const m = (form.watchedDuration || 0) % 60;
+                          const total = h * 60 + m;
+                          setForm((f) => ({ ...f, watchedDuration: Math.min(f.duration, total) }));
+                        }}
+                        className="w-14 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
                       />
+                      <span className="text-xs text-dark-300 font-medium">h</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={(form.watchedDuration || 0) % 60}
+                        onChange={(e) => {
+                          const h = Math.floor((form.watchedDuration || 0) / 60);
+                          const m = Math.max(0, Math.min(59, parseInt(e.target.value) || 0));
+                          const total = h * 60 + m;
+                          setForm((f) => ({ ...f, watchedDuration: Math.min(f.duration, total) }));
+                        }}
+                        className="w-14 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                      />
+                      <span className="text-xs text-dark-300 font-medium">min</span>
                     </div>
-                    {form.watchedDuration > 0 && (
-                      <p className="text-[10px] text-dark-400 mt-1">
-                        {Math.floor(form.watchedDuration / 60)}h{String(form.watchedDuration % 60).padStart(2, '0')}
-                      </p>
-                    )}
                   </div>
                 </div>
                 {form.duration > 0 && (

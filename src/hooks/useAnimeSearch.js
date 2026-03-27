@@ -5,6 +5,16 @@ const JIKAN_BASE   = 'https://api.jikan.moe/v4';
 const KITSU_BASE   = 'https://kitsu.io/api/edge';
 const ANILIST_GQL  = 'https://graphql.anilist.co';
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+// Parse Jikan duration string like "1 hr 52 min", "2 hr", "24 min per ep" → minutes
+function parseJikanDuration(str) {
+  if (!str) return 0;
+  const hrs = str.match(/(\d+)\s*hr/i);
+  const mins = str.match(/(\d+)\s*min/i);
+  return (hrs ? parseInt(hrs[1]) * 60 : 0) + (mins ? parseInt(mins[1]) : 0);
+}
+
 // ─── Mappers ──────────────────────────────────────────────────────────────────
 
 function mapJikan(item) {
@@ -190,7 +200,7 @@ async function getJikanDetails(malId) {
       description: item.synopsis || '',
       genres:      [...new Set(genres)],
       animeType:   isMovie ? 'movie' : 'series',
-      duration:    isMovie ? (item.duration ? parseInt(item.duration) || 0 : 0) : 0,
+      duration:    isMovie ? parseJikanDuration(item.duration) : 0,
       seasons: [{
         name:                 'Saison 1',
         episodeCount:         item.episodes || 0,
