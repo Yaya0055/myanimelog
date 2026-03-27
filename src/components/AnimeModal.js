@@ -28,18 +28,24 @@ const emptyAnime = () => ({
   seasons: [emptySeason()],
 });
 
-export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete }) {
+export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete, existingAnimes = [] }) {
   const [form, setForm] = useState(emptyAnime());
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [duplicateError, setDuplicateError] = useState('');
   const searchRef = useRef(null);
   const statusRef = useRef(null);
 
   const { results, loading, error, search, getAnimeDetails, clearResults } = useAnimeSearch();
 
   const isEditing = !!anime;
+
+  // Normalize title for duplicate comparison
+  const normTitle = (t = '') => t.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+  const existingTitles = existingAnimes.map(a => normTitle(a.title));
+  const isDuplicate = (title) => existingTitles.includes(normTitle(title));
 
   useEffect(() => {
     if (anime) {
@@ -49,6 +55,7 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
     }
     setSearchQuery('');
     setShowSuggestions(false);
+    setDuplicateError('');
     clearResults();
   }, [anime, isOpen, clearResults]);
 
@@ -77,6 +84,7 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
     setShowSuggestions(false);
     setSearchQuery('');
     setLoadingDetail(true);
+    setDuplicateError('');
 
     // Pass the full suggestion object so the hook picks the right API
     const details = await getAnimeDetails(suggestion);
@@ -142,6 +150,11 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
+    // Block duplicate when adding (not editing)
+    if (!isEditing && isDuplicate(form.title)) {
+      setDuplicateError('Cet anime est deja dans ta liste !');
+      return;
+    }
     onSave(form);
   };
 
@@ -224,52 +237,65 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
               {/* Suggestions dropdown */}
               {showSuggestions && results.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-dark-700 border border-dark-600/50 rounded-xl overflow-hidden shadow-2xl shadow-black/40 z-10 max-h-80 overflow-y-auto">
-                  {results.map((s) => (
-                    <button
-                      key={s.uid}
-                      type="button"
-                      onClick={() => selectSuggestion(s)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-dark-600 transition-colors text-left border-b border-dark-600/20 last:border-0"
-                    >
-                      <img
-                        src={s.coverImage}
-                        alt={s.title}
-                        className="w-9 h-12 object-cover rounded-md shrink-0 shadow-md"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-sm font-medium text-white truncate flex-1">{s.title}</p>
-                          <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                            s.source === 'MAL'    ? 'bg-ocean/20 text-ocean-light' :
-                            s.source === 'AniList'? 'bg-accent/20 text-accent-light' :
-                                                    'bg-neon-green/15 text-neon-green'
-                          }`}>
-                            {s.source}
-                          </span>
-                        </div>
-                        {s.titleAlt && (
-                          <p className="text-[10px] text-dark-300 truncate">{s.titleAlt}</p>
-                        )}
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] text-dark-300">
-                            {s.type} {s.year && `(${s.year})`}
-                          </span>
-                          {s.episodes > 0 && (
-                            <span className="text-[10px] text-dark-400">{s.episodes} ep.</span>
+                  {results.map((s) => {
+                    const alreadyAdded = isDuplicate(s.title);
+                    return (
+                      <button
+                        key={s.uid}
+                        type="button"
+                        onClick={() => !alreadyAdded && selectSuggestion(s)}
+                        disabled={alreadyAdded}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 transition-colors text-left border-b border-dark-600/20 last:border-0 ${
+                          alreadyAdded
+                            ? 'opacity-50 cursor-not-allowed bg-dark-700'
+                            : 'hover:bg-dark-600 cursor-pointer'
+                        }`}
+                      >
+                        <img
+                          src={s.coverImage}
+                          alt={s.title}
+                          className="w-9 h-12 object-cover rounded-md shrink-0 shadow-md"
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-medium text-white truncate flex-1">{s.title}</p>
+                            {alreadyAdded && (
+                              <span className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded bg-neon-orange/20 text-neon-orange">
+                                Deja ajouté
+                              </span>
+                            )}
+                            <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                              s.source === 'MAL'    ? 'bg-ocean/20 text-ocean-light' :
+                              s.source === 'AniList'? 'bg-accent/20 text-accent-light' :
+                                                      'bg-neon-green/15 text-neon-green'
+                            }`}>
+                              {s.source}
+                            </span>
+                          </div>
+                          {s.titleAlt && (
+                            <p className="text-[10px] text-dark-300 truncate">{s.titleAlt}</p>
                           )}
-                          {s.score > 0 && (
-                            <span className="text-[10px] text-yellow-400 font-semibold">★ {s.score}</span>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] text-dark-300">
+                              {s.type} {s.year && `(${s.year})`}
+                            </span>
+                            {s.episodes > 0 && (
+                              <span className="text-[10px] text-dark-400">{s.episodes} ep.</span>
+                            )}
+                            {s.score > 0 && (
+                              <span className="text-[10px] text-yellow-400 font-semibold">★ {s.score}</span>
+                            )}
+                          </div>
+                          {s.genres.length > 0 && (
+                            <p className="text-[10px] text-dark-400 truncate">
+                              {s.genres.slice(0, 4).join(', ')}
+                            </p>
                           )}
                         </div>
-                        {s.genres.length > 0 && (
-                          <p className="text-[10px] text-dark-400 truncate">
-                            {s.genres.slice(0, 4).join(', ')}
-                          </p>
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -573,6 +599,13 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
               ))}
             </div>
           </div>
+
+          {/* Duplicate error */}
+          {duplicateError && (
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neon-orange/10 border border-neon-orange/25 text-neon-orange text-sm font-medium">
+              {duplicateError}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center justify-between pt-3 border-t border-dark-600/30">

@@ -378,6 +378,7 @@ export default function App() {
         anime={editingAnime}
         onSave={handleSave}
         onDelete={handleDelete}
+        existingAnimes={animes}
       />
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />

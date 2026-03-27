@@ -1,0 +1,557 @@
+{
+  "animeSama": [
+    {
+      "slug": "d-frag",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "biidama-no-tsuki",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "bokura-wa-minna-kawaisou",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "a-certain-magical-index",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "mysterious-disappearances",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "magi-adventure-of-sinbad",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "aho-girl",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "food-for-the-soul",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "one-piece",
+      "seasons": [
+        "11",
+        "1"
+      ],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "kizoku-tensei",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "moi-le-maitre-des-interdits",
+      "seasons": [
+        "1"
+      ],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "shingeki-no-kyojin",
+      "seasons": [
+        "1",
+        "2",
+        "4",
+        "4-2"
+      ],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "le-chateau-ambulant",
+      "seasons": [],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "naruto",
+      "seasons": [
+        "1"
+      ],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "naruto-shippuden",
+      "seasons": [
+        "1"
+      ],
+      "source": "anime-sama"
+    },
+    {
+      "slug": "demon-slayer",
+      "seasons": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "source": "anime-sama"
+    }
+  ],
+  "voiranime": [
+    {
+      "slug": "aura-maryuuinkouga-saigo-no-tatakai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "bang-brave-bang-bravern",
+      "source": "voiranime"
+    },
+    {
+      "slug": "beelzebub",
+      "source": "voiranime"
+    },
+    {
+      "slug": "fuufu-ijou-koibito-miman",
+      "source": "voiranime"
+    },
+    {
+      "slug": "gakusen-toshi-asterisk",
+      "source": "voiranime"
+    },
+    {
+      "slug": "grisaia-no-kajitsu",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hokkaido-gals-are-super-adorable",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kage-no-jitsuryokusha-ni-naritakute-2",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kage-no-jitsuryokusha-ni-naritakute",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kanojo-okarishimasu-3",
+      "source": "voiranime"
+    },
+    {
+      "slug": "mahouka-koukou-no-rettousei-3",
+      "source": "voiranime"
+    },
+    {
+      "slug": "masou-gakuen-hxh",
+      "source": "voiranime"
+    },
+    {
+      "slug": "midara-na-ao-chan-wa-benkyou-ga-dekinai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "ninja-kamui",
+      "source": "voiranime"
+    },
+    {
+      "slug": "osake-wa-fuufu-ni-natte-kara",
+      "source": "voiranime"
+    },
+    {
+      "slug": "otonari-no-tenshi-sama-ni-itsunomanika-dame-ningen-ni-sareteita-ken",
+      "source": "voiranime"
+    },
+    {
+      "slug": "rail-wars",
+      "source": "voiranime"
+    },
+    {
+      "slug": "the-girl-downstairs",
+      "source": "voiranime"
+    },
+    {
+      "slug": "anyway-im-falling-in-love-with-you",
+      "source": "voiranime"
+    },
+    {
+      "slug": "asobi-ni-iku-yo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "beatless",
+      "source": "voiranime"
+    },
+    {
+      "slug": "ben-to",
+      "source": "voiranime"
+    },
+    {
+      "slug": "boku-no-kanojo-ga-majime-sugiru-shoujo-bitch-na-ken",
+      "source": "voiranime"
+    },
+    {
+      "slug": "carnival-phantasm",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dakara-boku-wa-h-ga-dekinai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "danchigai-special",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dokyuu-hentai-hxeros-ova",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dokyuu-hentai-hxeros",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dragon-crisis",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dumbbell-nan-kilo-moteru",
+      "source": "voiranime"
+    },
+    {
+      "slug": "getsuyoubi-no-tawawa",
+      "source": "voiranime"
+    },
+    {
+      "slug": "gokukoku-no-brynhildr",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hentai-ouji-to-warawanai-neko",
+      "source": "voiranime"
+    },
+    {
+      "slug": "ichiban-ushiro-no-daimaou",
+      "source": "voiranime"
+    },
+    {
+      "slug": "isekai-meikyuu-de-harem-wo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "joukamachi-no-dandelion",
+      "source": "voiranime"
+    },
+    {
+      "slug": "just-because",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kaifuku-jutsushi-no-yarinaoshi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kampfer",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kannagi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kanojo-ga-flag-wo-oraretara",
+      "source": "voiranime"
+    },
+    {
+      "slug": "keijo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kings-raid-ishi-wo-tsugumono-tachi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kiss-x-sis",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kyou-no-asuka-show",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kyoukaisenjou-no-horizon",
+      "source": "voiranime"
+    },
+    {
+      "slug": "mahou-sensou",
+      "source": "voiranime"
+    },
+    {
+      "slug": "mayo-chiki",
+      "source": "voiranime"
+    },
+    {
+      "slug": "monster-musume-no-oisha-san",
+      "source": "voiranime"
+    },
+    {
+      "slug": "motto-to-love-ru",
+      "source": "voiranime"
+    },
+    {
+      "slug": "murenase-seton-gakuen",
+      "source": "voiranime"
+    },
+    {
+      "slug": "muv-luv-alternative",
+      "source": "voiranime"
+    },
+    {
+      "slug": "netoge-no-yome-wa-onnanoko-ja-nai-to-omotta",
+      "source": "voiranime"
+    },
+    {
+      "slug": "nozo-x-kimi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "nyan-koi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "omoi-omoware-furi-furare",
+      "source": "voiranime"
+    },
+    {
+      "slug": "otona-no-bouguya-san",
+      "source": "voiranime"
+    },
+    {
+      "slug": "peter-grill-to-kenja-no-jikan",
+      "source": "voiranime"
+    },
+    {
+      "slug": "please-put-them-on-takamine-san",
+      "source": "voiranime"
+    },
+    {
+      "slug": "seirei-tsukai-no-blade-dance",
+      "source": "voiranime"
+    },
+    {
+      "slug": "senran-kagura",
+      "source": "voiranime"
+    },
+    {
+      "slug": "shomin-sample",
+      "source": "voiranime"
+    },
+    {
+      "slug": "sora-no-otoshimono",
+      "source": "voiranime"
+    },
+    {
+      "slug": "taimadou-gakuen-35-shiken-shoutai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "tsugumomo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "tsuujou-kougeki-ga-zentai-kougeki-de-ni-kai-kougeki-no-okaasan-wa-suki-desu-ka",
+      "source": "voiranime"
+    },
+    {
+      "slug": "val-x-love",
+      "source": "voiranime"
+    },
+    {
+      "slug": "yandere-dark-elf-she-chased-me-all-the-way-from-another-world",
+      "source": "voiranime"
+    },
+    {
+      "slug": "yuusha-ni-narenakatta-ore-wa-shibushibu-shuushoku-wo-ketsui-shimashita",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hortensia-saga",
+      "source": "voiranime"
+    },
+    {
+      "slug": "coderealize-sousei-no-himegimi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kawaikereba-hentai-demo-suki-ni-natte-kuremasu-ka",
+      "source": "voiranime"
+    },
+    {
+      "slug": "bem",
+      "source": "voiranime"
+    },
+    {
+      "slug": "knights-magic",
+      "source": "voiranime"
+    },
+    {
+      "slug": "tales-of-wedding-rings-2",
+      "source": "voiranime"
+    },
+    {
+      "slug": "toji-no-miko",
+      "source": "voiranime"
+    },
+    {
+      "slug": "nukitashi-the-animation",
+      "source": "voiranime"
+    },
+    {
+      "slug": "beheneko",
+      "source": "voiranime"
+    },
+    {
+      "slug": "temple",
+      "source": "voiranime"
+    },
+    {
+      "slug": "disney-twisted-wonderland-the-animation",
+      "source": "voiranime"
+    },
+    {
+      "slug": "runway-de-waratte",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kuusen-madoushi-kouhosei-no-kyoukan",
+      "source": "voiranime"
+    },
+    {
+      "slug": "unnamed-memory",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hagure-yuusha-no-estetica",
+      "source": "voiranime"
+    },
+    {
+      "slug": "with-you-our-love-will-make-it-through",
+      "source": "voiranime"
+    },
+    {
+      "slug": "4-cut-hero",
+      "source": "voiranime"
+    },
+    {
+      "slug": "shuumatsu-nani-shitemasu-ka-isogashii-desu-ka-sukutte-moratte-ii-desu-ka",
+      "source": "voiranime"
+    },
+    {
+      "slug": "inari-konkon-koi-iroha",
+      "source": "voiranime"
+    },
+    {
+      "slug": "minami-ke",
+      "source": "voiranime"
+    },
+    {
+      "slug": "9-nine-rulers-crown",
+      "source": "voiranime"
+    },
+    {
+      "slug": "megaton-kyuu-musashi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "chaos-dragon-sekiryuu-seneki",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hero-return",
+      "source": "voiranime"
+    },
+    {
+      "slug": "sekai-seifuku-bouryaku-no-zvezda",
+      "source": "voiranime"
+    },
+    {
+      "slug": "seitokai-no-ichizon",
+      "source": "voiranime"
+    },
+    {
+      "slug": "princess-lover",
+      "source": "voiranime"
+    },
+    {
+      "slug": "sekirei",
+      "source": "voiranime"
+    },
+    {
+      "slug": "kono-yo-no-hate-de-koi-o-utau-shoujo-yu-no",
+      "source": "voiranime"
+    },
+    {
+      "slug": "sora-no-manimani",
+      "source": "voiranime"
+    },
+    {
+      "slug": "yami-to-boushi-to-hon-no-tabibito",
+      "source": "voiranime"
+    },
+    {
+      "slug": "photokano",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dansai-bunri-no-crime-edge",
+      "source": "voiranime"
+    },
+    {
+      "slug": "iya-na-kao-sare-nagara-opantsu-misete-moraitai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "shimoneta-to-iu-gainen-ga-sonzai-shinai-taikutsu-na-sekai",
+      "source": "voiranime"
+    },
+    {
+      "slug": "flcl",
+      "source": "voiranime"
+    },
+    {
+      "slug": "ultraviolet-code-044",
+      "source": "voiranime"
+    },
+    {
+      "slug": "tatoeba-last-dungeon-mae-no-mura-no-shounen-ga-joban-no-machi-de-kurasu-youna-monogatari",
+      "source": "voiranime"
+    },
+    {
+      "slug": "hatsukoi-limited-gentei-shoujo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "psychic-school-wars",
+      "source": "voiranime"
+    },
+    {
+      "slug": "dont-touch-kotesashi",
+      "source": "voiranime"
+    },
+    {
+      "slug": "cencoroll",
+      "source": "voiranime"
+    },
+    {
+      "slug": "xian-wang-de-ri-chang-sheng-huo",
+      "source": "voiranime"
+    },
+    {
+      "slug": "maken-ki",
+      "source": "voiranime"
+    }
+  ]
+}
