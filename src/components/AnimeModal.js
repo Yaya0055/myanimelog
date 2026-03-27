@@ -78,8 +78,8 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
     setSearchQuery('');
     setLoadingDetail(true);
 
-    // Fetch full details from API
-    const details = await getAnimeDetails(suggestion.malId);
+    // Pass the full suggestion object so the hook picks the right API
+    const details = await getAnimeDetails(suggestion);
     setLoadingDetail(false);
 
     if (details) {
@@ -95,7 +95,7 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
       // Fallback to basic info from search results
       setForm((prev) => ({
         ...prev,
-        title: suggestion.titleFr || suggestion.title,
+        title: suggestion.title,
         coverImage: suggestion.coverImage,
         description: suggestion.synopsis,
         genres: suggestion.genres,
@@ -226,7 +226,7 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
                 <div className="absolute top-full left-0 right-0 mt-1 bg-dark-700 border border-dark-600/50 rounded-xl overflow-hidden shadow-2xl shadow-black/40 z-10 max-h-80 overflow-y-auto">
                   {results.map((s) => (
                     <button
-                      key={s.malId}
+                      key={s.uid}
                       type="button"
                       onClick={() => selectSuggestion(s)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-dark-600 transition-colors text-left border-b border-dark-600/20 last:border-0"
@@ -234,30 +234,39 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete })
                       <img
                         src={s.coverImage}
                         alt={s.title}
-                        className="w-9 h-13 object-cover rounded-md shrink-0 shadow-md"
+                        className="w-9 h-12 object-cover rounded-md shrink-0 shadow-md"
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-white truncate">{s.title}</p>
-                        {s.titleFr && s.titleFr !== s.title && (
-                          <p className="text-[10px] text-ocean-light truncate">{s.titleFr}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium text-white truncate flex-1">{s.title}</p>
+                          <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                            s.source === 'MAL'    ? 'bg-ocean/20 text-ocean-light' :
+                            s.source === 'AniList'? 'bg-accent/20 text-accent-light' :
+                                                    'bg-neon-green/15 text-neon-green'
+                          }`}>
+                            {s.source}
+                          </span>
+                        </div>
+                        {s.titleAlt && (
+                          <p className="text-[10px] text-dark-300 truncate">{s.titleAlt}</p>
                         )}
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[10px] text-dark-300">
                             {s.type} {s.year && `(${s.year})`}
                           </span>
-                          <span className="text-[10px] text-dark-400">
-                            {s.episodes > 0 ? `${s.episodes} ep.` : ''}
-                          </span>
+                          {s.episodes > 0 && (
+                            <span className="text-[10px] text-dark-400">{s.episodes} ep.</span>
+                          )}
                           {s.score > 0 && (
-                            <span className="text-[10px] text-yellow-400 font-semibold">
-                              MAL {s.score}
-                            </span>
+                            <span className="text-[10px] text-yellow-400 font-semibold">★ {s.score}</span>
                           )}
                         </div>
-                        <p className="text-[10px] text-dark-400 truncate">
-                          {s.genres.slice(0, 4).join(', ')}
-                        </p>
+                        {s.genres.length > 0 && (
+                          <p className="text-[10px] text-dark-400 truncate">
+                            {s.genres.slice(0, 4).join(', ')}
+                          </p>
+                        )}
                       </div>
                     </button>
                   ))}
