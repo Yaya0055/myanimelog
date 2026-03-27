@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   X, Plus, Minus, Trash2, Heart, Search, Check, ChevronDown,
-  CalendarDays, Tv, Save, Loader2
+  CalendarDays, Tv, Save, Loader2, Film, Clock
 } from 'lucide-react';
 import StarRating from './StarRating';
 import useAnimeSearch from '../hooks/useAnimeSearch';
@@ -25,6 +25,9 @@ const emptyAnime = () => ({
   status: 'Plan to Watch',
   score: 0,
   isFavorite: false,
+  animeType: 'series',
+  duration: 0,
+  watchedDuration: 0,
   seasons: [emptySeason()],
 });
 
@@ -98,8 +101,12 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete, e
         description: details.description,
         genres: details.genres,
         seasons: details.seasons,
+        animeType: details.animeType || 'series',
+        duration: details.duration || 0,
+        watchedDuration: 0,
       }));
     } else {
+      const isMovie = (suggestion.type || '').toLowerCase() === 'movie';
       // Fallback to basic info from search results
       setForm((prev) => ({
         ...prev,
@@ -107,6 +114,9 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete, e
         coverImage: suggestion.coverImage,
         description: suggestion.synopsis,
         genres: suggestion.genres,
+        animeType: isMovie ? 'movie' : 'series',
+        duration: 0,
+        watchedDuration: 0,
         seasons: [{
           name: 'Saison 1',
           episodeCount: suggestion.episodes || 0,
@@ -459,146 +469,234 @@ export default function AnimeModal({ isOpen, onClose, anime, onSave, onDelete, e
             </div>
           </div>
 
-          {/* Seasons */}
+          {/* Type toggle (Film / Serie) */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-semibold text-dark-300 uppercase tracking-wider flex items-center gap-2">
-                <Tv size={14} />
-                Saisons ({form.seasons.length})
-              </label>
+            <label className="block text-xs font-semibold text-dark-300 uppercase tracking-wider mb-1.5">
+              Type
+            </label>
+            <div className="flex gap-2">
               <button
                 type="button"
-                onClick={addSeason}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-ocean/15 text-ocean-light hover:bg-ocean/25 transition-colors"
+                onClick={() => setForm((f) => ({ ...f, animeType: 'series' }))}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                  form.animeType !== 'movie'
+                    ? 'bg-ocean/15 text-ocean-light border-ocean/25'
+                    : 'text-dark-400 border-dark-600/40 hover:bg-dark-700 hover:text-white'
+                }`}
               >
-                <Plus size={12} />
-                Ajouter
+                <Tv size={14} />
+                Serie
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, animeType: 'movie' }))}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                  form.animeType === 'movie'
+                    ? 'bg-accent/15 text-accent-light border-accent/25'
+                    : 'text-dark-400 border-dark-600/40 hover:bg-dark-700 hover:text-white'
+                }`}
+              >
+                <Film size={14} />
+                Film
               </button>
             </div>
-            <div className="space-y-3">
-              {form.seasons.map((season, i) => (
-                <div
-                  key={i}
-                  className="p-3 bg-dark-700/50 border border-dark-600/25 rounded-xl space-y-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={season.name}
-                      onChange={(e) => updateSeason(i, 'name', e.target.value)}
-                      className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white focus:outline-none focus:border-ocean/50 transition-all"
-                    />
-                    {form.seasons.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeSeason(i)}
-                        className="w-7 h-7 rounded-lg bg-neon-red/10 text-neon-red flex items-center justify-center hover:bg-neon-red/20 transition-colors"
-                      >
-                        <Trash2 size={12} />
-                      </button>
+          </div>
+
+          {/* Movie duration OR Seasons */}
+          {form.animeType === 'movie' ? (
+            <div>
+              <label className="text-xs font-semibold text-dark-300 uppercase tracking-wider flex items-center gap-2 mb-2">
+                <Film size={14} />
+                Film
+              </label>
+              <div className="p-3 bg-dark-700/50 border border-dark-600/25 rounded-xl space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-dark-400 mb-1">Duree totale (min)</label>
+                    <div className="flex items-center gap-1">
+                      <Clock size={14} className="text-dark-400 shrink-0" />
+                      <input
+                        type="number"
+                        value={form.duration || 0}
+                        onChange={(e) => setForm((f) => ({ ...f, duration: Math.max(0, parseInt(e.target.value) || 0) }))}
+                        className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                      />
+                    </div>
+                    {form.duration > 0 && (
+                      <p className="text-[10px] text-dark-400 mt-1">
+                        {Math.floor(form.duration / 60)}h{String(form.duration % 60).padStart(2, '0')}
+                      </p>
                     )}
                   </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[10px] text-dark-400 mb-1">Total episodes</label>
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateSeason(i, 'episodeCount', Math.max(0, season.episodeCount - 1))
-                          }
-                          className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
-                        >
-                          <Minus size={12} />
-                        </button>
-                        <input
-                          type="number"
-                          value={season.episodeCount}
-                          onChange={(e) =>
-                            updateSeason(i, 'episodeCount', Math.max(0, parseInt(e.target.value) || 0))
-                          }
-                          className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => updateSeason(i, 'episodeCount', season.episodeCount + 1)}
-                          className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
-                        >
-                          <Plus size={12} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] text-dark-400 mb-1">Episodes vus</label>
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateSeason(i, 'watchedEpisodes', Math.max(0, (season.watchedEpisodes || 0) - 1))
-                          }
-                          className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
-                        >
-                          <Minus size={12} />
-                        </button>
-                        <input
-                          type="number"
-                          value={season.watchedEpisodes || 0}
-                          onChange={(e) =>
-                            updateSeason(i, 'watchedEpisodes', Math.min(season.episodeCount, Math.max(0, parseInt(e.target.value) || 0)))
-                          }
-                          className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateSeason(i, 'watchedEpisodes', Math.min(season.episodeCount, (season.watchedEpisodes || 0) + 1))
-                          }
-                          className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
-                        >
-                          <Plus size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
+                  <div>
+                    <label className="block text-[10px] text-dark-400 mb-1">Duree regardee (min)</label>
+                    <div className="flex items-center gap-1">
+                      <Clock size={14} className="text-dark-400 shrink-0" />
                       <input
-                        type="checkbox"
-                        checked={season.isFinished}
-                        onChange={(e) => updateSeason(i, 'isFinished', e.target.checked)}
-                        className="w-4 h-4 rounded bg-dark-600 border-dark-500 text-ocean focus:ring-ocean/30"
+                        type="number"
+                        value={form.watchedDuration || 0}
+                        onChange={(e) => setForm((f) => ({ ...f, watchedDuration: Math.min(f.duration, Math.max(0, parseInt(e.target.value) || 0)) }))}
+                        className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
                       />
-                      <span className="text-xs text-dark-300">Termine</span>
-                    </label>
-
-                    <select
-                      value={season.releaseStatus}
-                      onChange={(e) => updateSeason(i, 'releaseStatus', e.target.value)}
-                      className="px-2 py-1 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white focus:outline-none focus:border-ocean/50 transition-all"
-                    >
-                      <option value="Released">Released</option>
-                      <option value="Not Released">Not Released</option>
-                    </select>
+                    </div>
+                    {form.watchedDuration > 0 && (
+                      <p className="text-[10px] text-dark-400 mt-1">
+                        {Math.floor(form.watchedDuration / 60)}h{String(form.watchedDuration % 60).padStart(2, '0')}
+                      </p>
+                    )}
                   </div>
-
-                  {season.releaseStatus === 'Not Released' && (
+                </div>
+                {form.duration > 0 && (
+                  <div className="h-1.5 bg-dark-600 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-accent to-ocean rounded-full transition-all"
+                      style={{ width: `${Math.min(100, ((form.watchedDuration || 0) / form.duration) * 100)}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold text-dark-300 uppercase tracking-wider flex items-center gap-2">
+                  <Tv size={14} />
+                  Saisons ({form.seasons.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={addSeason}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-ocean/15 text-ocean-light hover:bg-ocean/25 transition-colors"
+                >
+                  <Plus size={12} />
+                  Ajouter
+                </button>
+              </div>
+              <div className="space-y-3">
+                {form.seasons.map((season, i) => (
+                  <div
+                    key={i}
+                    className="p-3 bg-dark-700/50 border border-dark-600/25 rounded-xl space-y-3"
+                  >
                     <div className="flex items-center gap-2">
-                      <CalendarDays size={12} className="text-dark-400 shrink-0" />
                       <input
-                        type="date"
-                        value={season.expectedReleaseDate || ''}
-                        onChange={(e) => updateSeason(i, 'expectedReleaseDate', e.target.value)}
+                        type="text"
+                        value={season.name}
+                        onChange={(e) => updateSeason(i, 'name', e.target.value)}
                         className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white focus:outline-none focus:border-ocean/50 transition-all"
                       />
+                      {form.seasons.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeSeason(i)}
+                          className="w-7 h-7 rounded-lg bg-neon-red/10 text-neon-red flex items-center justify-center hover:bg-neon-red/20 transition-colors"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[10px] text-dark-400 mb-1">Total episodes</label>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateSeason(i, 'episodeCount', Math.max(0, season.episodeCount - 1))
+                            }
+                            className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <input
+                            type="number"
+                            value={season.episodeCount}
+                            onChange={(e) =>
+                              updateSeason(i, 'episodeCount', Math.max(0, parseInt(e.target.value) || 0))
+                            }
+                            className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => updateSeason(i, 'episodeCount', season.episodeCount + 1)}
+                            className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-dark-400 mb-1">Episodes vus</label>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateSeason(i, 'watchedEpisodes', Math.max(0, (season.watchedEpisodes || 0) - 1))
+                            }
+                            className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <input
+                            type="number"
+                            value={season.watchedEpisodes || 0}
+                            onChange={(e) =>
+                              updateSeason(i, 'watchedEpisodes', Math.min(season.episodeCount, Math.max(0, parseInt(e.target.value) || 0)))
+                            }
+                            className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white text-center focus:outline-none focus:border-ocean/50 transition-all"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateSeason(i, 'watchedEpisodes', Math.min(season.episodeCount, (season.watchedEpisodes || 0) + 1))
+                            }
+                            className="w-7 h-7 rounded-lg bg-dark-600 flex items-center justify-center hover:bg-dark-500 transition-colors"
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={season.isFinished}
+                          onChange={(e) => updateSeason(i, 'isFinished', e.target.checked)}
+                          className="w-4 h-4 rounded bg-dark-600 border-dark-500 text-ocean focus:ring-ocean/30"
+                        />
+                        <span className="text-xs text-dark-300">Termine</span>
+                      </label>
+
+                      <select
+                        value={season.releaseStatus}
+                        onChange={(e) => updateSeason(i, 'releaseStatus', e.target.value)}
+                        className="px-2 py-1 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white focus:outline-none focus:border-ocean/50 transition-all"
+                      >
+                        <option value="Released">Released</option>
+                        <option value="Not Released">Not Released</option>
+                      </select>
+                    </div>
+
+                    {season.releaseStatus === 'Not Released' && (
+                      <div className="flex items-center gap-2">
+                        <CalendarDays size={12} className="text-dark-400 shrink-0" />
+                        <input
+                          type="date"
+                          value={season.expectedReleaseDate || ''}
+                          onChange={(e) => updateSeason(i, 'expectedReleaseDate', e.target.value)}
+                          className="flex-1 px-2 py-1.5 bg-dark-600 border border-dark-500/40 rounded-lg text-xs text-white focus:outline-none focus:border-ocean/50 transition-all"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Duplicate error */}
           {duplicateError && (

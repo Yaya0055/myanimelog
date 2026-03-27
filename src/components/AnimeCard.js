@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Star, Play, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Heart, Star, Play, Eye, CheckCircle, XCircle, Film } from 'lucide-react';
 
 const statusConfig = {
   'Plan to Watch': { icon: Eye, color: 'from-ocean to-ocean-dark', badge: 'bg-ocean/80' },
@@ -8,11 +8,21 @@ const statusConfig = {
   'Dropped': { icon: XCircle, color: 'from-neon-red to-red-700', badge: 'bg-neon-red/80' },
 };
 
+const formatDuration = (min) => {
+  if (!min) return '0min';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return h > 0 ? `${h}h${m > 0 ? String(m).padStart(2, '0') : ''}` : `${m}min`;
+};
+
 export default function AnimeCard({ anime, onClick, onToggleFavorite }) {
   const config = statusConfig[anime.status] || statusConfig['Plan to Watch'];
+  const isMovie = anime.animeType === 'movie';
   const totalEpisodes = anime.seasons.reduce((sum, s) => sum + s.episodeCount, 0);
   const watchedEpisodes = anime.seasons.reduce((sum, s) => sum + (s.watchedEpisodes || 0), 0);
-  const progress = totalEpisodes > 0 ? (watchedEpisodes / totalEpisodes) * 100 : 0;
+  const progress = isMovie
+    ? (anime.duration > 0 ? ((anime.watchedDuration || 0) / anime.duration) * 100 : 0)
+    : (totalEpisodes > 0 ? (watchedEpisodes / totalEpisodes) * 100 : 0);
 
   return (
     <div
@@ -66,9 +76,20 @@ export default function AnimeCard({ anime, onClick, onToggleFavorite }) {
             {anime.title}
           </h3>
           <div className="flex items-center gap-2 text-[10px] text-dark-100">
-            <span>{anime.seasons.length} saison{anime.seasons.length > 1 ? 's' : ''}</span>
-            <span className="text-dark-400">|</span>
-            <span>{watchedEpisodes}/{totalEpisodes} ep.</span>
+            {isMovie ? (
+              <>
+                <Film size={10} className="shrink-0" />
+                <span>Film</span>
+                <span className="text-dark-400">|</span>
+                <span>{formatDuration(anime.watchedDuration || 0)}/{formatDuration(anime.duration || 0)}</span>
+              </>
+            ) : (
+              <>
+                <span>{anime.seasons.length} saison{anime.seasons.length > 1 ? 's' : ''}</span>
+                <span className="text-dark-400">|</span>
+                <span>{watchedEpisodes}/{totalEpisodes} ep.</span>
+              </>
+            )}
           </div>
         </div>
       </div>

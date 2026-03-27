@@ -13,6 +13,9 @@ function rowToAnime(row) {
     score: row.score || 0,
     isFavorite: row.is_favorite || false,
     seasons: row.seasons || [],
+    animeType: row.anime_type || 'series',
+    duration: row.duration || 0,
+    watchedDuration: row.watched_duration || 0,
     updatedAt: row.updated_at,
     createdAt: row.created_at,
   };
@@ -30,6 +33,9 @@ function animeToRow(anime, userId) {
     score: anime.score || 0,
     is_favorite: anime.isFavorite || false,
     seasons: anime.seasons || [],
+    anime_type: anime.animeType || 'series',
+    duration: anime.duration || 0,
+    watched_duration: anime.watchedDuration || 0,
   };
 }
 

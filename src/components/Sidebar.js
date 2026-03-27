@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Heart, Filter, BarChart3, Library } from 'lucide-react';
+import { X, Heart, Filter, BarChart3, Library, Film } from 'lucide-react';
 
 const ALL_STATUSES = ['Plan to Watch', 'Watching', 'Completed', 'Dropped'];
 const ALL_GENRES = [
@@ -43,10 +43,10 @@ export default function Sidebar({
   };
 
   const clearFilters = () => {
-    setFilters({ status: '', genres: [], favoritesOnly: false });
+    setFilters({ status: '', genres: [], favoritesOnly: false, moviesOnly: false });
   };
 
-  const hasActiveFilters = filters.status || filters.genres.length > 0 || filters.favoritesOnly;
+  const hasActiveFilters = filters.status || filters.genres.length > 0 || filters.favoritesOnly || filters.moviesOnly;
 
   return (
     <>
@@ -127,7 +127,7 @@ export default function Sidebar({
               </div>
             </div>
 
-            <div className="px-4 py-2">
+            <div className="px-4 py-2 space-y-1.5">
               <button
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, favoritesOnly: !prev.favoritesOnly }))
@@ -140,6 +140,20 @@ export default function Sidebar({
               >
                 <Heart size={16} className={filters.favoritesOnly ? 'fill-neon-pink' : ''} />
                 Favoris uniquement
+              </button>
+              <button
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, moviesOnly: !prev.moviesOnly }))
+                }
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all border ${
+                  filters.moviesOnly
+                    ? 'bg-accent/15 text-accent-light border-accent/25'
+                    : 'text-dark-300 border-dark-600/40 hover:bg-dark-700 hover:text-white'
+                }`}
+              >
+                <Film size={16} />
+                Films uniquement
+                <span className="ml-auto text-xs opacity-70">{animeCounts.movies || 0}</span>
               </button>
             </div>
 

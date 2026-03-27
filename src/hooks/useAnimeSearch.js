@@ -183,11 +183,14 @@ async function getJikanDetails(malId) {
       ...(item.themes  || []).map(t => t.name),
     ];
 
+    const isMovie = (item.type || '').toLowerCase() === 'movie';
     return {
       title:       item.title_english || item.title,
       coverImage:  item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || '',
       description: item.synopsis || '',
       genres:      [...new Set(genres)],
+      animeType:   isMovie ? 'movie' : 'series',
+      duration:    isMovie ? (item.duration ? parseInt(item.duration) || 0 : 0) : 0,
       seasons: [{
         name:                 'Saison 1',
         episodeCount:         item.episodes || 0,
@@ -211,6 +214,8 @@ async function getAniListDetails(anilistId) {
         description
         genres
         episodes
+        format
+        duration
         status
         seasonYear
         relations {
@@ -245,11 +250,14 @@ async function getAniListDetails(anilistId) {
         expectedReleaseDate:  '',
       }));
 
+    const isMovie = (item.format || '').toUpperCase() === 'MOVIE';
     return {
       title:       item.title?.english || item.title?.romaji || '',
       coverImage:  item.coverImage?.large || '',
       description: (item.description || '').replace(/<[^>]+>/g, ''),
       genres:      item.genres || [],
+      animeType:   isMovie ? 'movie' : 'series',
+      duration:    isMovie ? (item.duration || 0) : 0,
       seasons: [
         {
           name:                 'Saison 1',
@@ -280,11 +288,14 @@ async function getKitsuDetails(kitsuId) {
       .filter(i => i.type === 'genres')
       .map(i => i.attributes?.name || '');
 
+    const isMovie = (attr.subtype || '').toLowerCase() === 'movie';
     return {
       title:       attr.titles?.en || attr.titles?.en_jp || attr.canonicalTitle || '',
       coverImage:  attr.posterImage?.large || attr.posterImage?.medium || '',
       description: attr.synopsis || '',
       genres,
+      animeType:   isMovie ? 'movie' : 'series',
+      duration:    isMovie ? (attr.totalLength || 0) : 0,
       seasons: [{
         name:                 'Saison 1',
         episodeCount:         attr.episodeCount || 0,
@@ -368,11 +379,14 @@ export default function useAnimeSearch() {
       if (details) return details;
     }
     // Fallback: build details from search result itself
+    const isMovie = (result.type || '').toLowerCase() === 'movie';
     return {
       title:       result.title,
       coverImage:  result.coverImage,
       description: result.synopsis,
       genres:      result.genres,
+      animeType:   isMovie ? 'movie' : 'series',
+      duration:    0,
       seasons: [{
         name:                 'Saison 1',
         episodeCount:         result.episodes || 0,

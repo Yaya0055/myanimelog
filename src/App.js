@@ -26,7 +26,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState('collection');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState({ status: '', genres: [], favoritesOnly: false });
+  const [filters, setFilters] = useState({ status: '', genres: [], favoritesOnly: false, moviesOnly: false });
   const [sortBy, setSortBy] = useState('updatedAt');
   const [sortDir, setSortDir] = useState('desc');
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,6 +40,7 @@ export default function App() {
     ['Plan to Watch', 'Watching', 'Completed', 'Dropped'].forEach((s) => {
       counts[s] = animes.filter((a) => a.status === s).length;
     });
+    counts.movies = animes.filter((a) => a.animeType === 'movie').length;
     return counts;
   }, [animes]);
 
@@ -58,6 +59,9 @@ export default function App() {
     }
     if (filters.favoritesOnly) {
       list = list.filter((a) => a.isFavorite);
+    }
+    if (filters.moviesOnly) {
+      list = list.filter((a) => a.animeType === 'movie');
     }
 
     list.sort((a, b) => {
